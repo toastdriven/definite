@@ -3,3 +3,4 @@
 
 .. automodule:: definitely.constants
     :members:
+    :undoc-members:

@@ -2,4 +2,4 @@
 ==============
 
 .. automodule:: definitely
-    :members:
+    :members: get_version
