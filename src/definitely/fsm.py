@@ -35,6 +35,19 @@ class FSM(object):
 
         self._state_names = self.allowed_transitions.keys()
 
+    @classmethod
+    def from_json(cls, name, json_data):
+        # Construct a new class based on the JSON data.
+        new_cls = type(
+            name,
+            (cls,),
+            {
+                "allowed_transitions": json_data.get("allowed_transitions", {}),
+                "default_state": json_data.get("default_state", {}),
+            },
+        )
+        return new_cls
+
     def current_state(self):
         return self._current_state
 
@@ -53,6 +66,17 @@ class FSM(object):
 
         return state_name in available_transitions
 
+    def _call_handler(self, handler_name, state_name, obj=None):
+        handle_specific = getattr(self, handler_name, None)
+
+        if handle_specific is not None:
+            if not callable(handle_specific):
+                raise exceptions.InvalidHandler(
+                    f"The '{handler_name}' attribute is not callable"
+                )
+
+            return handle_specific(state_name, obj)
+
     def transition_to(self, state_name, obj=None):
         if not self.is_valid(state_name):
             raise self.InvalidState(f"'{state_name}' is not a recognized state.")
@@ -64,27 +88,12 @@ class FSM(object):
 
         # The state transition is allowed.
         # Check & run for the `handle_any` method first, ...
-        handle_any = getattr(self, "handle_any", None)
-
-        if handle_any is not None:
-            if not callable(handle_any):
-                raise exceptions.InvalidHandler(
-                    f"The 'handle_any' attribute is not callable"
-                )
-
-            handle_any(state_name, obj)
+        handle_any = "handle_any"
+        self._call_handler(handle_any, state_name, obj)
 
         # ...then the specific `handle_<state_name>` method.
         handler_name = f"handle_{state_name}"
-        handle_specific = getattr(self, handler_name, None)
-
-        if handle_specific is not None:
-            if not callable(handle_specific):
-                raise exceptions.InvalidHandler(
-                    f"The '{handler_name}' attribute is not callable"
-                )
-
-            handle_specific(state_name, obj)
+        self._call_handler(handler_name, state_name, obj)
 
         # Finally, we update our internal state.
         self._current_state = state_name
