@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "definitely"
+version = "1.0.0-alpha"
+description = "Simple finite state machines."
+authors = ["Daniel Lindsley <daniel@toastdriven.com>"]
+license = "BSD-3-Clause"
+readme = "README.md"
+repository = "https://github.com/toastdriven/definitely"
+packages = [
+    { include = "definitely", from = "src" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.6"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.4"
+Sphinx = "^5.0.1"
+
+[build-system]
+requires = [
+    "poetry-core>=1.0.0",
+    "setuptools>=42",
+    "wheel",
+]
+build-backend = "poetry.core.masonry.api"
