@@ -3,6 +3,18 @@ from . import exceptions  # import InvalidState, TransitionNotAllowed
 
 
 class FSM(object):
+    """
+    The base finite state machine class.
+
+    In normal usage, you should subclass this class. In doing so, you must
+    define your own `allowed_transitions` and `default_state` attributes on the
+    subclass.
+
+    Args:
+        initial_state (str): The initial state the instance should start in.
+            Default is `None` (use the `default_state`).
+    """
+
     allowed_transitions = {}
     default_state = constants.UNKNOWN_STATE
 
@@ -23,6 +35,14 @@ class FSM(object):
                 self._current_state = initial_state
 
     def setup(self):
+        """
+        A mostly-internal method for setting up required data.
+
+        Can be used to re-trigger this build if you're doing something
+        advanced/spicy.
+
+        No arguments or return values.
+        """
         if not len(self.allowed_transitions):
             raise exceptions.NoStatesDefined(
                 f"'allowed_transitions' not defined on {self}"
@@ -37,7 +57,20 @@ class FSM(object):
 
     @classmethod
     def from_json(cls, name, json_data):
-        # Construct a new class based on the JSON data.
+        """
+        Construct a new (sub)class, based on JSON data.
+
+        Useful for storing states/transitions externally & loading them at
+        runtime.
+
+        Args:
+            name (str): The desired (sub)class name.
+            json_data (dict): A dictionary containing an `allowed_transitions`
+                dictionary and a `default_state` key/value.
+
+        Returns:
+            FSM: A newly built subclass of FSM.
+        """
         new_cls = type(
             name,
             (cls,),
@@ -49,15 +82,47 @@ class FSM(object):
         return new_cls
 
     def current_state(self):
+        """
+        What state the FSM is currently in.
+
+        Returns:
+            str: The current state.
+        """
         return self._current_state
 
     def all_states(self):
+        """
+        All the valid state names for the FSM.
+
+        Returns:
+            list: All the state names.
+        """
         return sorted(self._state_names)
 
     def is_valid(self, state_name):
+        """
+        Identifies if the provided state name is a recognized/valid name.
+
+        Args:
+            state_name (str): The name to check.
+
+        Returns:
+            bool: If it's valid, returns True. Otherwise, returns False.
+        """
         return state_name in self._state_names
 
     def is_allowed(self, state_name):
+        """
+        From the current state, identifies if transitioning to the provided
+        state name is allowed.
+
+        Args:
+            state_name (str): The state to transition to.
+
+        Returns:
+            bool: If the transition would be allowed, returns True. Otherwise,
+                returns False.
+        """
         current_state = self.current_state()
         available_transitions = self.allowed_transitions.get(current_state, None)
 
@@ -78,6 +143,32 @@ class FSM(object):
             return handle_specific(state_name, obj)
 
     def transition_to(self, state_name, obj=None):
+        """
+        Triggers a state transition to the provided state name.
+
+        If the special `handle_any` method is defined on the FSM subclass, it
+        will *always* be called, regardless of what state name is provided.
+
+        If a `handle_<state_name>` method is defined on the FSM subclass, it
+        will be called.
+
+        Args:
+            state_name (str): The state to transition to.
+            obj (Any): (Optional) An object to perform actions on as part of the
+                transition behavior. For example, triggering a save on that
+                object, updating that object's internal state, sending
+                notifications about it, etc. Default is `None`.
+
+        Returns:
+            None
+
+        Raises:
+            InvalidState: If the state name is invalid.
+            TransitionNotAllowed: If the transition isn't allowed from the
+                current state.
+            InvalidHandler: If a handler is present on the FSM, but is not
+                callable.
+        """
         if not self.is_valid(state_name):
             raise self.InvalidState(f"'{state_name}' is not a recognized state.")
 
