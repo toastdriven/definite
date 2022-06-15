@@ -86,6 +86,8 @@ news_post = NewsPost.objects.create(
 workflow.transition_to("awaiting_review", news_post)
 # ...it triggers the spell check & the email we defined above, as well as
 # hitting the `handle_any` method & updating the `state` field in the DB.
+news_post.refresh_from_db()
+news_post.state # "awaiting_review" !
 ```
 
 
