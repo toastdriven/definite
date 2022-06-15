@@ -19,6 +19,7 @@ Welcome to definitely's documentation!
    :maxdepth: 1
    :caption: API Reference:
 
+   api/module
    api/constants
    api/exceptions
    api/fsm
