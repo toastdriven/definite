@@ -25,10 +25,10 @@ class ComplexFlow(FSM):
     }
     default_state = "created"
 
-    def handle_any(self, desired_state, obj=None):
+    def handle_any(self, desired_state):
         pass
 
-    def handle_in_progress(self, desired_state, obj=None):
+    def handle_in_progress(self, desired_state):
         pass
 
 
@@ -61,7 +61,7 @@ def test_init_and_setup():
 
 
 def test_initial_state():
-    basic = BasicFlow("waiting")
+    basic = BasicFlow(initial_state="waiting")
     assert basic._current_state == "waiting"
 
 
@@ -88,7 +88,7 @@ def test_is_valid():
 
 def test__call_handler():
     class WithHandler(BasicFlow):
-        def handle_waiting(self, state_name, obj=None):
+        def handle_waiting(self, state_name):
             # We'll observe this with `mock`.
             pass
 
@@ -97,7 +97,7 @@ def test__call_handler():
     with mock.patch.object(fsm, "handle_waiting") as mock_handler:
         fsm._call_handler("handle_waiting", "waiting")
         # It should find & call the correct handler method.
-        mock_handler.assert_called_once_with("waiting", None)
+        mock_handler.assert_called_once_with("waiting")
 
 
 def test_transition_to_basic():
@@ -132,39 +132,39 @@ def test_transition_to_invalid():
 
 
 def test_transition_to_complex():
-    fsm = ComplexFlow()
-    assert fsm.current_state() == "created"
-
     job = {
         "id": "CCEE9690-6626-4827-AC1A-73A911278067",
     }
 
+    fsm = ComplexFlow(obj=job)
+    assert fsm.current_state() == "created"
+
     with mock.patch.object(fsm, "handle_any") as mock_any:
         with mock.patch.object(fsm, "handle_in_progress") as mock_in_progress:
-            fsm.transition_to("waiting", job)
+            fsm.transition_to("waiting")
             assert fsm.current_state() == "waiting"
-            mock_any.assert_called_once_with("waiting", job)
+            mock_any.assert_called_once_with("waiting")
             mock_in_progress.assert_not_called()
 
     with mock.patch.object(fsm, "handle_any") as mock_any:
         with mock.patch.object(fsm, "handle_in_progress") as mock_in_progress:
-            fsm.transition_to("in_progress", job)
+            fsm.transition_to("in_progress")
             assert fsm.current_state() == "in_progress"
-            mock_any.assert_called_once_with("in_progress", job)
-            mock_in_progress.assert_called_once_with("in_progress", job)
+            mock_any.assert_called_once_with("in_progress")
+            mock_in_progress.assert_called_once_with("in_progress")
 
     with mock.patch.object(fsm, "handle_any") as mock_any:
         with mock.patch.object(fsm, "handle_in_progress") as mock_in_progress:
-            fsm.transition_to("waiting", job)
+            fsm.transition_to("waiting")
             assert fsm.current_state() == "waiting"
-            mock_any.assert_called_once_with("waiting", job)
+            mock_any.assert_called_once_with("waiting")
             mock_in_progress.assert_not_called()
 
     with mock.patch.object(fsm, "handle_any") as mock_any:
         with mock.patch.object(fsm, "handle_in_progress") as mock_in_progress:
-            fsm.transition_to("done", job)
+            fsm.transition_to("done")
             assert fsm.current_state() == "done"
-            mock_any.assert_called_once_with("done", job)
+            mock_any.assert_called_once_with("done")
             mock_in_progress.assert_not_called()
 
 

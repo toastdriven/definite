@@ -53,28 +53,27 @@ class Workflow(FSM):
     default_state = "draft"
 
     # Define a `handle_<state_name>` method on the class.
-    def handle_awaiting_review(self, new_state, obj):
-        spell_check_results = check_spelling(obj.content)
+    def handle_awaiting_review(self, new_state):
+        spell_check_results = check_spelling(self.obj.content)
         msg = (
-            f"{obj.title} ready for review. "
+            f"{self.obj.title} ready for review. "
             f"{len(spell_check_results)} spelling errors."
         )
         send_email(to=editor_email, message=msg)
 
-    def handle_published(self, new_state, obj):
-        obj.pub_date = datetime.datetime.utcnow()
-        obj.save()
+    def handle_published(self, new_state):
+        self.obj.pub_date = datetime.datetime.utcnow()
+        self.obj.save()
 
     # You can also setup code that fires on **ANY** valid transition with the
     # special `handle_any` method.
-    def handle_any(self, new_state, obj):
-        obj.state = new_state
-        obj.save()
+    def handle_any(self, new_state):
+        self.obj.state = new_state
+        self.obj.save()
 
-# We start the same.
-workflow = Workflow()
-workflow.current_state() # "draft"
 
+# We can pull in any Python object, like a database-backed model, that we
+# want to associate with our FSM.
 from news.models import NewsPost
 news_post = NewsPost.objects.create(
     title="Hello world!",
@@ -82,8 +81,19 @@ news_post = NewsPost.objects.create(
     state="draft",
 )
 
-# But when we trigger this change (& newly pass our `NewsPost` object)...
-workflow.transition_to("awaiting_review", news_post)
+# We start mostly the same, but this time pass an `obj` kwarg!
+workflow = Workflow(obj=news_post)
+
+# If you wanted to be explicit, you could also pass along the `initial_state`:
+workflow = Workflow(
+    obj=news_post,
+    initial_state=news_post.state
+)
+
+workflow.current_state() # "draft"
+
+# But when we trigger this change...
+workflow.transition_to("awaiting_review")
 # ...it triggers the spell check & the email we defined above, as well as
 # hitting the `handle_any` method & updating the `state` field in the DB.
 news_post.refresh_from_db()

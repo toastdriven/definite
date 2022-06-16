@@ -28,22 +28,22 @@ class ComplexWorkflow(FSM):
     default_state = "draft"
 
     # Define a `handle_<state_name>` method on the class.
-    def handle_awaiting_review(self, new_state, obj):
-        # spell_check_results = check_spelling(obj.content)
+    def handle_awaiting_review(self, new_state):
+        # spell_check_results = check_spelling(self.obj.content)
         # msg = (
-        #     f"{obj.title} ready for review. "
+        #     f"{self.obj.title} ready for review. "
         #     f"{len(spell_check_results)} spelling errors."
         # )
         # send_email(to=editor_email, message=msg)
         pass
 
-    def handle_published(self, new_state, obj):
-        obj.pub_date = datetime.datetime.utcnow()
-        obj.save()
+    def handle_published(self, new_state):
+        self.obj.pub_date = datetime.datetime.utcnow()
+        self.obj.save()
 
-    def handle_any(self, new_state, obj):
-        obj.state = new_state
-        obj.save()
+    def handle_any(self, new_state):
+        self.obj.state = new_state
+        self.obj.save()
 
 
 class FakeNewsPost(object):
@@ -84,19 +84,19 @@ def test_complex():
     with mock.patch.object(workflow, "handle_any") as mock_handle_any:
         with mock.patch.object(workflow, "handle_awaiting_review") as mock_handle_ar:
             workflow.transition_to("awaiting_review")
-            mock_handle_any.assert_called_once_with("awaiting_review", None)
-            mock_handle_ar.assert_called_once_with("awaiting_review", None)
+            mock_handle_any.assert_called_once_with("awaiting_review")
+            mock_handle_ar.assert_called_once_with("awaiting_review")
 
     with mock.patch.object(workflow, "handle_any") as mock_handle_any:
         workflow.transition_to("reviewed")
-        mock_handle_any.assert_called_once_with("reviewed", None)
+        mock_handle_any.assert_called_once_with("reviewed")
         assert workflow.current_state() == "reviewed"
 
     with mock.patch.object(workflow, "handle_any") as mock_handle_any:
         with mock.patch.object(workflow, "handle_published") as mock_handle_published:
             workflow.transition_to("published")
-            mock_handle_any.assert_called_once_with("published", None)
-            mock_handle_published.assert_called_once_with("published", None)
+            mock_handle_any.assert_called_once_with("published")
+            mock_handle_published.assert_called_once_with("published")
 
     assert workflow.current_state() == "published"
 
@@ -105,25 +105,25 @@ def test_complex():
 
 
 def test_handlers():
-    workflow = ComplexWorkflow()
-    assert workflow.current_state() == "draft"
-
     news_post = FakeNewsPost(
         title="Hello world!",
         content="This iz our frist post!",
         state="draft",
     )
 
-    workflow.transition_to("awaiting_review", news_post)
+    workflow = ComplexWorkflow(obj=news_post)
+    assert workflow.current_state() == "draft"
+
+    workflow.transition_to("awaiting_review")
     # It should've updated the state on the object!
     assert news_post.state == "awaiting_review"
     assert news_post.pub_date is None
 
-    workflow.transition_to("reviewed", news_post)
+    workflow.transition_to("reviewed")
     assert news_post.state == "reviewed"
     assert news_post.pub_date is None
 
-    workflow.transition_to("published", news_post)
+    workflow.transition_to("published")
     # Both `handle_any` *AND* `handle_published` should've been called.
     assert news_post.state == "published"
     now = datetime.datetime.utcnow()

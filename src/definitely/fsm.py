@@ -11,6 +11,10 @@ class FSM(object):
     subclass.
 
     Args:
+        obj (Any): (Optional) An object to perform actions on as part of any
+            transition handlers. For example, triggering a save on that
+            object, updating that object's internal state, sending
+            notifications about it, etc. Default is `None`.
         initial_state (str): The initial state the instance should start in.
             Default is `None` (use the `default_state`).
     """
@@ -23,8 +27,9 @@ class FSM(object):
     InvalidState = exceptions.InvalidState
     TransitionNotAllowed = exceptions.TransitionNotAllowed
 
-    def __init__(self, initial_state=None):
+    def __init__(self, obj=None, initial_state=None):
         self._state_names = []
+        self.obj = obj
         self._current_state = self.default_state
 
         # Trigger all the setup/caching.
@@ -131,7 +136,7 @@ class FSM(object):
 
         return state_name in available_transitions
 
-    def _call_handler(self, handler_name, state_name, obj=None):
+    def _call_handler(self, handler_name, state_name):
         handle_specific = getattr(self, handler_name, None)
 
         if handle_specific is not None:
@@ -140,9 +145,9 @@ class FSM(object):
                     f"The '{handler_name}' attribute is not callable"
                 )
 
-            return handle_specific(state_name, obj)
+            return handle_specific(state_name)
 
-    def transition_to(self, state_name, obj=None):
+    def transition_to(self, state_name):
         """
         Triggers a state transition to the provided state name.
 
@@ -154,10 +159,6 @@ class FSM(object):
 
         Args:
             state_name (str): The state to transition to.
-            obj (Any): (Optional) An object to perform actions on as part of the
-                transition behavior. For example, triggering a save on that
-                object, updating that object's internal state, sending
-                notifications about it, etc. Default is `None`.
 
         Returns:
             None
@@ -180,11 +181,11 @@ class FSM(object):
         # The state transition is allowed.
         # Check & run for the `handle_any` method first, ...
         handle_any = "handle_any"
-        self._call_handler(handle_any, state_name, obj)
+        self._call_handler(handle_any, state_name)
 
         # ...then the specific `handle_<state_name>` method.
         handler_name = f"handle_{state_name}"
-        self._call_handler(handler_name, state_name, obj)
+        self._call_handler(handler_name, state_name)
 
         # Finally, we update our internal state.
         self._current_state = state_name
