@@ -1,5 +1,5 @@
-``definitely``
-==============
+``definite``
+============
 
-.. automodule:: definitely
+.. automodule:: definite
     :members: get_version

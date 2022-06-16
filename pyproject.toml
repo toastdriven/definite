@@ -1,13 +1,13 @@
 [tool.poetry]
-name = "definitely"
+name = "definite"
 version = "1.0.0"
 description = "Simple finite state machines."
 authors = ["Daniel Lindsley <daniel@toastdriven.com>"]
 license = "BSD-3-Clause"
 readme = "README.md"
-repository = "https://github.com/toastdriven/definitely"
+repository = "https://github.com/toastdriven/definite"
 packages = [
-    { include = "definitely", from = "src" },
+    { include = "definite", from = "src" },
 ]
 
 [tool.poetry.dependencies]

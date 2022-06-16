@@ -1,7 +1,7 @@
 Tutorial
 ========
 
-`definitely` lets you create small finite state machines. These are great for
+`definite` lets you create small finite state machines. These are great for
 tracking state, as well as triggering transition behavior when the states
 change.
 
@@ -9,7 +9,7 @@ change.
 The Most Basic Example
 ----------------------
 
-To start with, you'll need to import the ``FSM`` class from ``definitely``, then
+To start with, you'll need to import the ``FSM`` class from ``definite``, then
 subclass it.
 
 We'll define the tiniest fully-functional subclass we can, allowing just a
@@ -19,7 +19,7 @@ attributes on the subclass.
 
 .. code-block:: python
 
-    from definitely import FSM
+    from definite import FSM
 
     class Tiny(FSM):
         allowed_transitions = {
@@ -97,7 +97,7 @@ We can model all the states a news story could be in this:
 
 .. code-block:: python
 
-    from definitely import FSM
+    from definite import FSM
 
     class Workflow(FSM):
         allowed_transitions = {
@@ -134,7 +134,7 @@ our business logic.
 Adding Transition Behavior
 --------------------------
 
-You can build your own logic around the FSMs anywhere, but ``definitely`` also
+You can build your own logic around the FSMs anywhere, but ``definite`` also
 supports adding your own transition logic directly to the state machine, keeping
 the state & behavior together.
 
@@ -143,7 +143,7 @@ is either waiting on review, or when it's available for the editor-in-chief to
 publish.
 
 We can expand on transition behavior by adding "handlers" to specific states.
-In ``definitely``, any method prefixed with ``handle_`` followed by the desired
+In ``definite``, any method prefixed with ``handle_`` followed by the desired
 state name will **automatically** be called when changing to that state.
 
 So, to send emails when ``awaiting_review`` & ``reviewed`` are met, we'd
@@ -154,7 +154,7 @@ implement the following handlers.
     from email.message import EmailMessage
     import smtplib
 
-    from definitely import FSM
+    from definite import FSM
 
 
     FROM_EMAIL = "no-reply@example.com"
@@ -394,7 +394,7 @@ We've learned how to define simple finite state machines, ones with complex
 state interactions, how to use the everyday parts of the API, and how to build
 in behaviors!
 
-However, there's more that can be done with ``definitely``:
+However, there's more that can be done with ``definite``:
 
 * You can store your states/transitions in external JSON files
 * You can implement logic that only happens on certain transitions

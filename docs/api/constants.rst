@@ -1,7 +1,7 @@
-``definitely.constants``
-========================
+``definite.constants``
+======================
 
-.. py:data:: definitely.constants.UNKNOWN_STATE
+.. py:data:: definite.constants.UNKNOWN_STATE
     :type: class
 
     A sentinel value, used by the ``FSM`` class to detect when no
@@ -11,7 +11,7 @@
     strictly used for identity purposes.
 
 
-.. py:data:: definitely.constants.ANY
+.. py:data:: definite.constants.ANY
     :type: str
     :value: ``"any"``
 

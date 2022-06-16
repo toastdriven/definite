@@ -1,13 +1,13 @@
 Advanced Usage
 ==============
 
-Here are some advanced ways you can use ``definitely``.
+Here are some advanced ways you can use ``definite``.
 
 
 Use External JSON Files
 -----------------------
 
-``definitely`` has built-in support for loading states/transitions directly
+``definite`` has built-in support for loading states/transitions directly
 from JSON files. This allows you to share the states with other code, or allow
 non-technical users to edit them.
 
@@ -31,7 +31,7 @@ However, it can be loaded & the classes created at runtime.
 .. code-block:: python
 
     >>> import json
-    >>> from definitely import FSM
+    >>> from definite import FSM
 
     # First, we load the JSON up.
     >>> state_data = json.loads("/path/to/above/file.json")
@@ -113,7 +113,7 @@ transitions has a lot of potential.
 Auto-Create State Constants
 ---------------------------
 
-``definitely`` automatically does a fair amount of checking of state names for
+``definite`` automatically does a fair amount of checking of state names for
 validity. However, some programmers may prefer having constants for use instead
 of the simple strings shown throughout these docs.
 
@@ -122,7 +122,7 @@ built-in behavior to automatically create constants for use.
 
 .. code-block:: python
 
-    from definitely import FSM
+    from definite import FSM
 
 
     class AutoConstantsFSM(FSM):

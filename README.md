@@ -1,4 +1,4 @@
-# `definitely`
+# `definite`
 
 Simple finite state machines.
 
@@ -8,7 +8,7 @@ Perfect for representing workflows.
 ## Quickstart
 
 ```python
-from definitely import FSM
+from definite import FSM
 
 # You define all the valid states, as well as what their allowed
 # transitions are.
@@ -103,7 +103,7 @@ news_post.state # "awaiting_review" !
 
 ## Installation
 
-`pip install definitely`
+`pip install definite`
 
 
 ## Requirements

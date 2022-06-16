@@ -1,6 +1,6 @@
-``definitely.exceptions``
-=========================
+``definite.exceptions``
+=======================
 
-.. automodule:: definitely.exceptions
+.. automodule:: definite.exceptions
     :members:
     :undoc-members:

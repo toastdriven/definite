@@ -1,5 +1,5 @@
-``definitely.fsm``
-==================
+``definite.fsm``
+================
 
-.. automodule:: definitely.fsm
+.. automodule:: definite.fsm
     :members:

@@ -3,7 +3,7 @@ from unittest import mock
 
 import pytest
 
-from definitely import FSM
+from definite import FSM
 
 
 class BasicWorkflow(FSM):

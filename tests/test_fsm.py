@@ -2,8 +2,8 @@ from unittest import mock
 
 import pytest
 
-from definitely import exceptions
-from definitely.fsm import FSM
+from definite import exceptions
+from definite.fsm import FSM
 
 
 class BasicFlow(FSM):

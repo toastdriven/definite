@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = "definitely"
+project = "definite"
 copyright = "2022, Daniel Lindsley"
 author = "Daniel Lindsley"
 
