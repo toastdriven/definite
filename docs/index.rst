@@ -6,8 +6,12 @@
 Welcome to definitely's documentation!
 ======================================
 
+Simple finite state machines.
+
+Perfect for representing workflows.
+
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Guides:
 
    usage/tutorial
