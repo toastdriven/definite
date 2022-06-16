@@ -2,7 +2,7 @@ from .fsm import FSM
 
 __author__ = "Daniel Lindsley"
 __license__ = "New BSD"
-__version__ = (1, 0, 0, "alpha")
+__version__ = (1, 0, 0, "beta")
 
 
 def get_version(full=False):
