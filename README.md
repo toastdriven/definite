@@ -1,3 +1,5 @@
+[![Documentation Status](https://readthedocs.org/projects/definite/badge/?version=latest)](https://definite.readthedocs.io/en/latest/?badge=latest)
+
 # `definite`
 
 Simple finite state machines.
