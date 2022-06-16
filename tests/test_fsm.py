@@ -60,6 +60,20 @@ def test_init_and_setup():
     assert len(basic._state_names) > 0
 
 
+def test_setup_untransitionable_state():
+    class Broken(FSM):
+        allowed_transitions = {
+            "start": ["nopenopenope"],
+            "end": None,
+        }
+        default_state = "start"
+
+    with pytest.raises(Broken.InvalidState) as excinfo:
+        broke = Broken()
+
+    assert "'start' contains 'nopenopenope'" in str(excinfo.value)
+
+
 def test_initial_state():
     basic = BasicFlow(initial_state="waiting")
     assert basic._current_state == "waiting"

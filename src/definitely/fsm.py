@@ -60,6 +60,19 @@ class FSM(object):
 
         self._state_names = self.allowed_transitions.keys()
 
+        # Check that all states are present as keys.
+        for current_name, transitions in self.allowed_transitions.items():
+            if transitions is None:
+                continue
+
+            for desired_name in transitions:
+                if desired_name not in self._state_names:
+                    msg = (
+                        f"'{current_name}' contains '{desired_name}' as a "
+                        f"transition, which is not present as a top-level state."
+                    )
+                    raise self.InvalidState(msg)
+
     @classmethod
     def from_json(cls, name, json_data):
         """
