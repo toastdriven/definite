@@ -212,14 +212,14 @@ automatically be called upon transition. For example:
 
 .. code-block:: python
 
-    >>> storyflow = Workflow()
+    >>> workflow = Workflow()
     # Some work happens, then...
 
-    >>> storyflow.transition_to("awaiting_review")
+    >>> workflow.transition_to("awaiting_review")
     # During this transition, the ``handle_awaiting_review`` method gets called
     # and the email is sent to the editors!
 
-    >>> storyflow.transition_to("reviewed")
+    >>> workflow.transition_to("reviewed")
     # And similarly with the editor-in-chief!
 
 
