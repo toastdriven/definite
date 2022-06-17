@@ -219,7 +219,7 @@ automatically be called upon transition. For example:
     # During this transition, the ``handle_awaiting_review`` method gets called
     # and the email is sent to the editors!
 
-    >>> workflow.transition_to("reviewed")
+    >>> storyflow.transition_to("reviewed")
     # And similarly with the editor-in-chief!
 
 
@@ -304,7 +304,7 @@ handlers.
     # Now when we make the transition to the new state, the editors will get
     # a customized email telling them the title of the story that's ready for
     # review!
-    >>> storyflow.transition_to("awaiting_review")
+    >>> workflow.transition_to("awaiting_review")
 
 Another improvement we can make is to persist the ``Workflow`` state in the
 database. So if a different server loads the story, the correct state will be
@@ -360,7 +360,7 @@ Now when we work with the story, we're also persisting the state to the DB.
 
     # But now, when we trigger the transition, both the `handle_any` & the
     # `handle_awaiting_review` will fire!
-    >>> storyflow.transition_to("awaiting_review")
+    >>> workflow.transition_to("awaiting_review")
     # Email sent!
 
     # Proof that `handle_any` fired!
