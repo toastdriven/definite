@@ -219,7 +219,7 @@ automatically be called upon transition. For example:
     # During this transition, the ``handle_awaiting_review`` method gets called
     # and the email is sent to the editors!
 
-    >>> workflow.transition_to("reviewed")
+    >>> storyflow.transition_to("reviewed")
     # And similarly with the editor-in-chief!
 
 
