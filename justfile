@@ -1,4 +1,7 @@
 # https://just.systems/
+
+set dotenv-load := false
+
 shell:
     poetry shell
 
