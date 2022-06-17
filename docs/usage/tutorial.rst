@@ -33,15 +33,16 @@ attributes on the subclass.
     assumption would be that the first mentioned state in
     ``allowed_transitions`` would be the default.
 
-    Unfortunately, dictionary ordering is **NOT** guaranteed in Python. So
-    even though the definition is code might look sorted, once it exists
-    in-memory, there's no guaranteed *"first"* key.
+    Only relatively recently in Python's history did dictionary ordering become
+    guaranteed (`documented feature in 3.7`_). And even now, not all third-party
+    tooling respects this.
 
     This could be solved in a variety of clever ways (special syntax, changing
     from a ``dict`` to a two-``tuple`` structure, using
-    ``collections.OrderedDict``, etc.). But manually specifying it this way is
-    clear, easy-to-read, & unsurprising/doesn't require special knowledge.
-    Hence, having to specify it.
+    ``collections.OrderedDict``, etc.).
+
+    But in the end, manually specifying it this way is clear, easy-to-read, &
+    unsurprising/doesn't require special knowledge. Hence, having to specify it.
 
 Now you can instantiate the new ``Tiny`` class. Each instance starts in the
 provided default state of ``start``.
@@ -406,3 +407,6 @@ Alternatively, you can dive into the API references, such as the
 :doc:`../api/fsm` reference.
 
 Enjoy!
+
+
+.. _`documented feature in 3.7`: https://docs.python.org/3/library/stdtypes.html?highlight=preserve#mapping-types-dict
